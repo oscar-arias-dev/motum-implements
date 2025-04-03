@@ -14,7 +14,7 @@ import {
 import dayjs from 'dayjs';
 import { useToast } from '../../../components/Toast';
 
-const URL = 'https://secure.tecnomotum.com/bcim/training-api.php';
+const URL = 'http://localhost/cim-training-backend/training-api.php';
 const resourceName = {
     singular: 'participante',
     plural: 'participantes',
@@ -138,7 +138,7 @@ export default function TrainingDetailsModal({ open, onClose, training }) {
 
     const rowMarkup = participants?.map(
         (
-            { id_training, id_participant, attended, created_at, fullname, email, phone_number, whatsapp, platform },
+            { id_training, id_participant, attended, created_at, fullname, email, phone_number, whatsapp, platform, customer, },
             index,
         ) => (
             <IndexTable.Row
@@ -149,6 +149,8 @@ export default function TrainingDetailsModal({ open, onClose, training }) {
                 disabled={(attended === "1" || attended === 1)}
             >
                 <IndexTable.Cell>{fullname}</IndexTable.Cell>
+                <IndexTable.Cell>{customer ?? "~"}</IndexTable.Cell>
+                <IndexTable.Cell>{platform ?? "~"}</IndexTable.Cell>
                 <IndexTable.Cell>{email}</IndexTable.Cell>
                 <IndexTable.Cell>{phone_number}</IndexTable.Cell>
                 <IndexTable.Cell>{dayjs(created_at)?.format('DD/MM/YYYY')}</IndexTable.Cell>
@@ -197,6 +199,8 @@ export default function TrainingDetailsModal({ open, onClose, training }) {
                         }}
                         headings={[
                             { title: 'Nombre' },
+                            { title: 'Cliente' },
+                            { title: 'Plataforma' },
                             { title: 'Email' },
                             { title: 'Teléfono' },
                             { title: 'Fecha de inscripción' },

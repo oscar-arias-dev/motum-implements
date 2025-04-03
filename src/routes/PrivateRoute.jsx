@@ -6,6 +6,7 @@ import {
   HomeFilledIcon,
   ViewportNarrowIcon,
   LayoutLogoBlockIcon,
+  FileIcon,
 } from '@shopify/polaris-icons';
 
 const logo = {
@@ -82,6 +83,11 @@ const PrivateRoute = () => {
             label: 'Ciclo de PM por Puerta',
             icon: ViewportNarrowIcon,
             onClick: () => navigate("/motorstop-by-doors-cycle"),
+          },
+          {
+            label: 'Reporte de Prueba',
+            icon: FileIcon,
+            onClick: () => navigate("/test-report"),
           },
         ]}
         /* action={{

@@ -54,6 +54,16 @@ export default function TrainingTable({ type, data, loading, onOpen }) {
         clearSelection();
     }
 
+    const handleSendToVideocall = () => {
+        const findedTraining = data?.find(current => current?.id === selectedResources[0]) ?? null;
+        const currentLink = findedTraining?.link ?? "";
+        if (currentLink) {
+            window.open(currentLink, "_blank", "noopener,noreferrer");
+        } else {
+            console.warn("No hay un enlace disponible.");
+        }
+    }
+
     const rowMarkup = paginatedData?.map(
         (
             { id, date, link, total_enrollments },
@@ -75,6 +85,7 @@ export default function TrainingTable({ type, data, loading, onOpen }) {
                     <b>{total_enrollments}</b>
                 </Badge>
                 </IndexTable.Cell>
+                <IndexTable.Cell><i>{link?.split("google.com")?.[1] ?? "~"}</i></IndexTable.Cell>
             </IndexTable.Row>
         ),
     ) ?? [];
@@ -83,6 +94,12 @@ export default function TrainingTable({ type, data, loading, onOpen }) {
         {
             content: 'Detalles',
             onAction: handleDetailsClick,
+            disabled: selectedResources?.length > 1,
+        },
+        {
+            content: 'Videollamada',
+            onAction: handleSendToVideocall,
+            disabled: selectedResources?.length > 1,
         },
     ];
 
@@ -103,6 +120,7 @@ export default function TrainingTable({ type, data, loading, onOpen }) {
                     { title: 'Día' },
                     { title: 'Fecha' },
                     { title: 'Inscritos' },
+                    { title: 'Link' },
                 ]}
                 promotedBulkActions={promotedBulkActions}
                 pagination={{

@@ -39,11 +39,11 @@ export default function CimTraining() {
             }
             const now = dayjs();
             const endedFiltered = json?.filter(entry => {
-                const elementDate = dayjs(entry.date);
+                const elementDate = dayjs(entry.date).add(12, 'hour');
                 return elementDate.isBefore(now);
             }) ?? [];
             const upcomingFiltered = json?.filter(entry => {
-                const elementDate = dayjs(entry.date);
+                const elementDate = dayjs(entry.date).add(12, 'hour');
                 return elementDate.isAfter(now);
             }) ?? [];
             setEndedTrainings(endedFiltered);
