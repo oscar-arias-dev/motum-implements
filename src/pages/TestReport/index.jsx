@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { FormLayout, LegacyCard, Page, Autocomplete, Icon, TextField, Button, } from "@shopify/polaris";
-import { SearchIcon, PlusIcon, XIcon, } from '@shopify/polaris-icons';
+import { SearchIcon, PlusIcon, XIcon, BlogIcon, } from '@shopify/polaris-icons';
 import { useToast } from "../../components/Toast";
 import dayjs from "dayjs";
+import Events from "./components/Events";
+import EventsDetails from "./components/EventsDetails";
 
 export default function TestReport() {
     const { showToast } = useToast();
@@ -13,8 +15,10 @@ export default function TestReport() {
         testingEnd: "",
         eventSumary: "",
         testers: [],
+        tests: [],
+        testsDetails: [],
+        finalComments: "",
     });
-    console.log({ report });
     const [customers, setCustomers] = useState([]);
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [inputValue, setInputValue] = useState('');
@@ -112,6 +116,43 @@ export default function TestReport() {
             };
         });
         setReport(current => ({ ...current, testers: currentTesters }));
+    }
+
+    const handleSetTests = (currentTest) => {
+        setReport(currentReport => ({
+            ...currentReport,
+            tests: currentTest,
+        }));
+    }
+
+    const handleAddTestDetailsTemplate = (newTest) => {
+        setReport(current => ({
+            ...current,
+            testsDetails: [...current?.testsDetails, { test: newTest, result: "", comment: "", }],
+        }));
+    }
+
+    const handleDeleteTestDetails = (test) => {
+        const newTestDetails = report?.testsDetails?.filter(current => current?.test !== test);
+        setReport(current => ({
+            ...current,
+            testsDetails: newTestDetails,
+        }));
+    }
+
+    const handleSetTestDetails = (details) => {
+        setReport(current => ({
+            ...current,
+            testsDetails: details, 
+        }))
+    }
+
+    const handleFinalCommentsInputChange = (finalComment) => {
+        setReport(current => ({ ...current, finalComments: finalComment }));
+    }
+
+    const handleBuildDoc = () => {
+        console.log("handleBuildDoc");
     }
 
     const isThereSomeTesterEmpty = report?.testers?.some(current => !current?.name || !current?.position);
@@ -375,6 +416,7 @@ export default function TestReport() {
                         primaryFooterAction={{
                             content: 'Aceptar',
                             onAction: handleNextStep,
+                            disabled: report?.tests?.length === 0,
                         }}
                         secondaryFooterActions={[
                             {
@@ -383,9 +425,37 @@ export default function TestReport() {
                             },
                         ]}
                     >
-                        
+                        <Events report={report} onSetTests={handleSetTests} onAddDetails={handleAddTestDetailsTemplate} onDeleteDetails={handleDeleteTestDetails} />
                     </LegacyCard>
-                ) : <></>
+                )  : (step === 5) ? (
+                    <EventsDetails report={report} onSave={handleSetTestDetails} onNext={handleNextStep} onPrev={handlePrevStep} />
+                ) : (step === 6) ? (
+                    <LegacyCard
+                        title="Comentarios finales"
+                        sectioned
+                        primaryFooterAction={{
+                            content: 'Construir informe',
+                            onAction: handleBuildDoc,
+                            disabled: !report?.finalComments,
+                            icon: BlogIcon,
+                            destructive: true,
+                        }}
+                        secondaryFooterActions={[
+                            {
+                                content: "Atrás",
+                                onAction: handlePrevStep,
+                            },
+                        ]}
+                    >
+                        <TextField
+                            label="Comentarios:"
+                            value={report?.finalComments ?? ""}
+                            onChange={handleFinalCommentsInputChange}
+                            multiline={6}
+                            autoComplete="off"
+                        />
+                    </LegacyCard>
+            )    : <></>
             }
         </Page>
     );

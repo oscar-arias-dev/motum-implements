@@ -14,7 +14,7 @@ import {
 import dayjs from 'dayjs';
 import { useToast } from '../../../components/Toast';
 
-const URL = 'http://localhost/cim-training-backend/training-api.php';
+const URL = 'https://secure.tecnomotum.com/bcim/training-api.php';
 const resourceName = {
     singular: 'participante',
     plural: 'participantes',
@@ -116,7 +116,6 @@ export default function TrainingDetailsModal({ open, onClose, training }) {
                 return;
             }
             const json = await response?.json();
-            console.log({ json });
             await handleRetrieveParticipants();
             clearSelection();
             showToast("Asistencia confirmada");
