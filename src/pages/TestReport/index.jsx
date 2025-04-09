@@ -5,6 +5,7 @@ import { useToast } from "../../components/Toast";
 import dayjs from "dayjs";
 import Events from "./components/Events";
 import EventsDetails from "./components/EventsDetails";
+import { buildDocxReport } from "./utils/generateDocxReport";
 
 export default function TestReport() {
     const { showToast } = useToast();
@@ -151,8 +152,8 @@ export default function TestReport() {
         setReport(current => ({ ...current, finalComments: finalComment }));
     }
 
-    const handleBuildDoc = () => {
-        console.log("handleBuildDoc");
+    const handleBuildDoc = async () => {
+        await buildDocxReport(report, inputValue, inputValueUnits);
     }
 
     const isThereSomeTesterEmpty = report?.testers?.some(current => !current?.name || !current?.position);
